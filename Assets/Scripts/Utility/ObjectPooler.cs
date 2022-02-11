@@ -5,34 +5,37 @@ using UnityObject = UnityEngine.Object;
 //add logging!!!!
 //add error handling!!!!
 
-public partial class ObjectPooler
+namespace Ironbelly.Utility
 {
-	private readonly Dictionary<Type, UnityObjectPool> unityObjectPools
-		= new Dictionary<Type, UnityObjectPool>();
-
-	public void CreatePool<T>(T objectToClone, int poolSize) where T : UnityObject
+	public partial class ObjectPooler
 	{
-		Type poolType = typeof(T);
-		if (!unityObjectPools.ContainsKey(poolType))
-			unityObjectPools.Add(poolType, new UnityObjectPool(objectToClone, poolSize));
+		private readonly Dictionary<Type, UnityObjectPool> unityObjectPools
+			= new Dictionary<Type, UnityObjectPool>();
 
-		ResizePool<T>(poolSize);
-	}
-
-	public void ResizePool<T>(int poolSize) where T : UnityObject
-	{
-		if (unityObjectPools.TryGetValue(typeof(T), out var pool))
-			pool.Resize(poolSize);
-	}
-
-	public void DestroyPool<T>() where T : UnityObject
-	{
-		Type poolType = typeof(T);
-
-		if (unityObjectPools.TryGetValue(poolType, out var pool))
+		public void CreatePool<T>(T objectToClone, int poolSize) where T : UnityObject
 		{
-			pool.Destroy();
-			unityObjectPools.Remove(poolType);
+			Type poolType = typeof(T);
+			if (!unityObjectPools.ContainsKey(poolType))
+				unityObjectPools.Add(poolType, new UnityObjectPool(objectToClone, poolSize));
+
+			ResizePool<T>(poolSize);
+		}
+
+		public void ResizePool<T>(int poolSize) where T : UnityObject
+		{
+			if (unityObjectPools.TryGetValue(typeof(T), out var pool))
+				pool.Resize(poolSize);
+		}
+
+		public void DestroyPool<T>() where T : UnityObject
+		{
+			Type poolType = typeof(T);
+
+			if (unityObjectPools.TryGetValue(poolType, out var pool))
+			{
+				pool.Destroy();
+				unityObjectPools.Remove(poolType);
+			}
 		}
 	}
 }
