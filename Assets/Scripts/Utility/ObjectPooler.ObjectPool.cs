@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityObject = UnityEngine.Object;
 
+//add logging!!!!
+//add error handling!!!!
+
 public partial class ObjectPooler
 {
-	private class UnityObjectPool<T> where T : UnityObject
+	private class UnityObjectPool
 	{
-		private readonly T objectToClone;
-		private readonly List<T> objects = new List<T>();
-		private readonly Stack<int> stack = new Stack<int>();
+		private readonly UnityObject objectToClone;
+		private readonly List<UnityObject> objects = new List<UnityObject>();
+		private readonly Stack<int> emptyIds = new Stack<int>();
 
-		public UnityObjectPool(T objectToClone, int poolSize)
+		public UnityObjectPool(UnityObject objectToClone, int poolSize)
 		{
 			this.objectToClone = objectToClone;
 			Resize(poolSize);
@@ -25,7 +28,7 @@ public partial class ObjectPooler
 				for (int i = originalObjectCount; i < poolSize; i++)
 				{
 					objects.Add(UnityObject.Instantiate(objectToClone));
-					stack.Push(i);
+					emptyIds.Push(i);
 				}
 				return;
 			}

@@ -3,28 +3,29 @@ using System.Collections.Generic;
 using UnityObject = UnityEngine.Object;
 
 //add logging!!!!
+//add error handling!!!!
 
 public partial class ObjectPooler
 {
-	private readonly Dictionary<Type, UnityObjectPool<UnityObject>> unityObjectPools
-		= new Dictionary<Type, UnityObjectPool<UnityObject>>();
+	private readonly Dictionary<Type, UnityObjectPool> unityObjectPools
+		= new Dictionary<Type, UnityObjectPool>();
 
 	public void CreatePool<T>(T objectToClone, int poolSize) where T : UnityObject
 	{
 		Type poolType = typeof(T);
 		if (!unityObjectPools.ContainsKey(poolType))
-			unityObjectPools.Add(poolType, new UnityObjectPool<T>(objectToClone, poolSize));
+			unityObjectPools.Add(poolType, new UnityObjectPool(objectToClone, poolSize));
 
 		ResizePool<T>(poolSize);
 	}
 
-	public void ResizePool<T>(int poolSize)
+	public void ResizePool<T>(int poolSize) where T : UnityObject
 	{
 		if (unityObjectPools.TryGetValue(typeof(T), out var pool))
 			pool.Resize(poolSize);
 	}
 
-	public void DestroyPool<T>()
+	public void DestroyPool<T>() where T : UnityObject
 	{
 		Type poolType = typeof(T);
 
