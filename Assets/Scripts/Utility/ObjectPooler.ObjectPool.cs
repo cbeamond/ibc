@@ -35,6 +35,17 @@ namespace Ironbelly.Utility
 					return;
 				}
 
+				while (true)
+				{
+					if (emptyIds.Count == 0)
+						break;
+
+					if (poolSize == objects.Count)
+						break;
+
+					int emptyId = emptyIds.Pop();
+
+				}
 				// there are two options here.
 				//	1 - remove only the end of the list. This may involve removing active objects that don't need to be removed
 				//  2 - remove inactive objects first, and then the end of the list. Much better!
@@ -43,6 +54,11 @@ namespace Ironbelly.Utility
 			}
 
 			public void Destroy() => Resize(0);
+
+			public void CreateObject()
+			{
+				if (emptyIds.Count > 0)
+			}
 		}
 	}
 }

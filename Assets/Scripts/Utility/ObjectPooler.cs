@@ -37,5 +37,17 @@ namespace Ironbelly.Utility
 				unityObjectPools.Remove(poolType);
 			}
 		}
+
+		public T GetPooledObject<T>() where T : UnityObject
+		{
+			if (unityObjectPools.TryGetValue(typeof(T), out var pool))
+				return pool.GetPooledObject();
+			return default;
+		}
+
+		public void DestroyObject<T>(UnityObject unityObject)
+		{
+			return unityObjectPools[typeof(T)].DestroyObject(unityObject);
+		}
 	}
 }
