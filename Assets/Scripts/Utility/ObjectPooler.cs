@@ -41,7 +41,7 @@ namespace Ironbelly.Utility
 		public T GetPooledObject<T>() where T : UnityObject
 		{
 			if (unityObjectPools.TryGetValue(typeof(T), out var pool))
-				return pool.GetPooledObject();
+				return (T)pool.GetPooledObject();
 			return default;
 		}
 
