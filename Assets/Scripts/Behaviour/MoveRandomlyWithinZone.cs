@@ -12,10 +12,6 @@ namespace Ironbelly.Behaviour
 		public float minMoveSpeedPerSecond = 6f;
 		private float moveAmountPerSecond;
 
-		public float maxTimeBetweenCourseChange = 5f;
-		public float minTimeBetweenCourseChange = 1f;
-		private float timeUntilNextCourseChange;
-
 		private Vector3 direction;
 
 		private void Awake()
@@ -23,49 +19,23 @@ namespace Ironbelly.Behaviour
 			moveAmountPerSecond = Random.Range(minMoveSpeedPerSecond, maxMoveSpeedPerSecond);
 		}
 
-		private void Start()
-		{
-			MoveToInsideZone(GameplaySystem.Instance.ContainingZone);
-			UpdateCourse();
-
-			void MoveToInsideZone(ContainingZone containingZone)
-			{
-
-				Bounds bounds = containingZone.Bounds;
-
-				transform.position = new Vector3
-				(
-					x: Random.Range(1f, bounds.extents.x - 1f),
-					y: Random.Range(1f, bounds.extents.y - 1f),
-					z: Random.Range(1f, bounds.extents.z - 1f)
-				);
-			}
-		}
-
 		private void Update()
 		{
 			if (Time.frameCount < 10)
 				return;
-			timeUntilNextCourseChange -= Time.deltaTime;
-			//if (timeUntilNextCourseChange < 0)
-			//	UpdateCourse();
 
-			//transform.position += moveAmountPerSecond * Time.deltaTime * direction;
 			transform.position += moveAmountPerSecond * Time.deltaTime * direction.normalized;
-				
 
 			if (!GameplaySystem.Instance.ContainingZone.Bounds.Contains(transform.position))
 			{
 				// If we leave the zone lets simply reverse direction and add extra time to make sure
 				// that we don't glitch out of the zone
 				direction *= -1;
-				timeUntilNextCourseChange += 1f;
 			}
 		}
 
 		private void UpdateCourse()
 		{
-			timeUntilNextCourseChange = Random.Range(minTimeBetweenCourseChange, maxTimeBetweenCourseChange);
 			direction = new Vector3(
 				x: Random.Range(0, 360),
 				y: Random.Range(0, 360),
@@ -73,16 +43,28 @@ namespace Ironbelly.Behaviour
 			);
 		}
 
+		private void MoveToInsideZone(ContainingZone containingZone)
+		{
+			Bounds bounds = containingZone.Bounds;
+
+			transform.position = new Vector3
+			(
+				x: Random.Range(-bounds.extents.x + bounds.extents.x * 0.05f, bounds.extents.x - bounds.extents.x * 0.05f),
+				y: Random.Range(-bounds.extents.y + bounds.extents.y * 0.05f, bounds.extents.y - bounds.extents.y * 0.05f),
+				z: Random.Range(-bounds.extents.z + bounds.extents.z * 0.05f, bounds.extents.z - bounds.extents.z * 0.05f)
+			);
+		}
+
 		#region IPooledObject
 
 		public void OnObjectSpawned()
 		{
+			MoveToInsideZone(GameplaySystem.Instance.ContainingZone);
 			UpdateCourse();
 		}
 
 		public void OnObjectDespawn()
 		{
-			timeUntilNextCourseChange = 0f;
 		}
 
 		#endregion
