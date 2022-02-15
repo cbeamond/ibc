@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-//add logging!!!!
-//add error handling!!!!
-
 namespace Ironbelly.Systems
 {
 	public partial class ObjectPooler

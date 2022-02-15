@@ -1,9 +1,6 @@
 ﻿using Ironbelly.Systems;
 using UnityEngine;
 
-//add logging!!!!
-//add error handling!!!!
-
 namespace Ironbelly.Behaviour
 {
 	public class MoveRandomlyWithinZone : MonoBehaviour, IPooledObject
@@ -56,6 +53,10 @@ namespace Ironbelly.Behaviour
 		}
 
 		#region IPooledObject
+
+		public void DespawnObject()
+		{
+		}
 
 		public void OnObjectSpawned()
 		{

@@ -2,9 +2,6 @@
 using System;
 using UnityEngine;
 
-//add logging!!!!
-//add error handling!!!!
-
 namespace Ironbelly.Systems
 {
 	public class GameplaySystem : MonoBehaviour
@@ -12,12 +9,15 @@ namespace Ironbelly.Systems
 		[SerializeField]
 		private GameObject CubePrefab;
 
-		private const string cubePoolTag = "Cube";
-		public int CubeAmount = 10;
-		private int previousCubeAmount;
+		[SerializeField]
+		private GameObject BulletPrefab;
+
+		public int CubeSpawnAmount = 20;
+		public int BulletSpawnAmount = 10;
 
 		[HideInInspector]
 		public static GameplaySystem Instance;
+
 		public ContainingZone ContainingZone;
 		public readonly ObjectPooler ObjectPooler = new ObjectPooler();
 
@@ -37,30 +37,25 @@ namespace Ironbelly.Systems
 			if (!ContainingZone)
 				Debug.LogError($"No {typeof(ContainingZone)} has been assigned to {nameof(ContainingZone)}");
 
-			previousCubeAmount = CubeAmount;
-			ObjectPooler.CreatePool(cubePoolTag, CubeAmount, CubePrefab);
-			SpawnCubes(CubeAmount);
+			ObjectPooler.CreatePool(Constant.ObjectPoolTag.Cube, CubeSpawnAmount, CubePrefab);
+			SpawnCubes(CubeSpawnAmount);
 
+			ObjectPooler.CreatePool(Constant.ObjectPoolTag.Bullet, BulletSpawnAmount, BulletPrefab);
 		}
 
 		private void Update()
 		{
-			if (previousCubeAmount != CubeAmount)
-			{
-				CubeAmount = Mathf.Max(0, CubeAmount);
-				ObjectPooler.ResizePool(cubePoolTag, CubeAmount);
+			CubeSpawnAmount = Mathf.Max(0, CubeSpawnAmount);
+			ObjectPooler.ResizePool(Constant.ObjectPoolTag.Cube, CubeSpawnAmount);
 
-				if (previousCubeAmount < CubeAmount)
-					SpawnCubes(CubeAmount - previousCubeAmount);
-
-				previousCubeAmount = CubeAmount;
-			}
+			BulletSpawnAmount = Mathf.Max(0, BulletSpawnAmount);
+			ObjectPooler.ResizePool(Constant.ObjectPoolTag.Bullet, BulletSpawnAmount);
 		}
 
 		private void SpawnCubes(int amountToSpawn)
 		{
 			for (int i = 0; i < amountToSpawn; i++)
-				ObjectPooler.SpawnObject(cubePoolTag);
+				ObjectPooler.SpawnObject(Constant.ObjectPoolTag.Cube);
 		}
 	}
 }

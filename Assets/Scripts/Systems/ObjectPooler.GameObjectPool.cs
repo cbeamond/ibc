@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityObject = UnityEngine.Object;
 
-//add logging!!!!
-//add error handling!!!!
-
 namespace Ironbelly.Systems
 {
 	public partial class ObjectPooler
@@ -74,7 +71,7 @@ namespace Ironbelly.Systems
 						GameObject gameObject = objects[objectId];
 
 						if (gameObject.TryGetComponent(out IPooledObject pooledObject))
-							pooledObject.OnObjectDespawn(); //todo check
+							pooledObject.OnObjectDespawn();
 
 						UnityObject.Destroy(objects[objectId]);
 						objects.Remove(objectId);

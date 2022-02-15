@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-//add logging!!!!
-//add error handling!!!!
-// right now this is O(n) complex to find. It's optimised, but still O(n). Can this be fixed? maybe BSP/etc?
+// right now this is pretty inefficent but okay for smaller numbers
 
 namespace Ironbelly.Utility
 {

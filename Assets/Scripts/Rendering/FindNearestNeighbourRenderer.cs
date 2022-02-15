@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
 
-//add logging!!!!
-//add error handling!!!!
-
 namespace Ironbelly.Utility
 {
 	[RequireComponent(typeof(FindNearestNeighbour))]
