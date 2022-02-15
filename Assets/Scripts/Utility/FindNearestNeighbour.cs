@@ -12,9 +12,6 @@ namespace Ironbelly.Utility
 		private static readonly HashSet<FindNearestNeighbour> neighbours
 			= new HashSet<FindNearestNeighbour>();
 
-		private int lastUpdatedFrame = -1;
-		private FindNearestNeighbour nearest;
-
 		public void OnEnable()
 		{
 			neighbours.Add(this);
@@ -23,34 +20,29 @@ namespace Ironbelly.Utility
 		public void OnDisable()
 		{
 			neighbours.Remove(this);
-
-			if (nearest && nearest.nearest == this)
-				nearest.nearest = null;
-			nearest = null;
 		}
 
 		public FindNearestNeighbour Find()
 		{
-			if (lastUpdatedFrame == Time.frameCount)
-				return nearest;
-
+			FindNearestNeighbour nearest = null;
 			float closestNeighbourDistanceSquared = float.MaxValue;
 
-			foreach (var neighbour in neighbours)
+			foreach (FindNearestNeighbour neighbour in neighbours)
 			{
 				if (!neighbour)
 					continue;
 
-				if (neighbour.lastUpdatedFrame == Time.frameCount)
+				if (neighbour == this)
 					continue;
 
 				float distanceSquared = (transform.position - neighbour.transform.position).sqrMagnitude;
 				if (distanceSquared < closestNeighbourDistanceSquared)
+				{
 					nearest = neighbour;
+					closestNeighbourDistanceSquared = distanceSquared;
+				}
 			}
 
-			nearest.nearest = this;
-			nearest.lastUpdatedFrame = Time.frameCount;
 			return nearest;
 		}
 	}
